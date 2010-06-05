@@ -1,0 +1,22 @@
+# Apple
+\.DS_Store$
+
+# Maven
+^[^/]*/target/
+
+# Eclipse
+\.classpath$
+\.project$
+\.settings$
+
+# NetBeans
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+
+# IDEA
+\.iml$
+\.ipr$
+\.iws$
