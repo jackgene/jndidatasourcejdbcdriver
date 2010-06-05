@@ -44,7 +44,15 @@ import java.util.Properties;
  * @version 1.0
  * @since 1.0 (June 5, 2010)
  */
-public class JndiDataSourceDelegatingConnection implements Connection {
+class JndiDataSourceDelegatingConnection implements Connection {
+    JndiDataSourceDelegatingConnection(String jndiName) {
+        
+    }
+    
+    String getJndiName() {
+        return null;
+    }
+    
     public Statement createStatement() throws SQLException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
