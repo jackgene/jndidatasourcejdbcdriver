@@ -36,6 +36,21 @@ class JndiDataSourceDelegatingConnectionSpec extends Spec
         unwrap(classOf[Connection]) must be theSameInstanceAs mockConn
     }
     
+    it ("must be a wrapper for java.sql.Connection") {
+      testInstance.asInstanceOf[Wrapper].
+        isWrapperFor(classOf[Connection]) must be (true)
+    }
+    
+    it ("must be a wrapper for java.sql.Connection implementations") {
+      testInstance.asInstanceOf[Wrapper].
+        isWrapperFor(classOf[MockConnection]) must be (true)
+    }
+    
+    it ("must not be a wrapper for other classes") {
+      testInstance.asInstanceOf[Wrapper].
+        isWrapperFor(classOf[Object]) must be (false)
+    }
+    
     // This is here for documentation purposes only
     it ("must delegate all method calls to the wrapped connection") (pending)
   }
