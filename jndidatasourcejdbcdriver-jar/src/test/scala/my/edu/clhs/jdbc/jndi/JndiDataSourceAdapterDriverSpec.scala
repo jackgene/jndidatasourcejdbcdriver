@@ -41,6 +41,10 @@ class JndiDataSourceAdapterDriverSpec extends Spec with MustMatchersForJUnit {
         getJndiName() must equal (jndiName)
     }
     
+    it ("must not connect when given an unaccepted URL") {
+      driver.connect(null, null) must be (null)
+    }
+    
     it ("must accept URLs starting with \"jdbc:jndi:\"") {
       driver.acceptsURL("jdbc:jndi:jdbc/testDataSource") must be (true)
     }
