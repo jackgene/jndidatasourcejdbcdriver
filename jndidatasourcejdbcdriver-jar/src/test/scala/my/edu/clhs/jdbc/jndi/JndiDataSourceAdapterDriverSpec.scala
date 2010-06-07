@@ -69,7 +69,8 @@ class JndiDataSourceAdapterDriverSpec extends Spec with MustMatchersForJUnit {
       driver.getMinorVersion() must equal (0)
     }
     
-    it ("must not be JDBC compliant (dependent on underlying implementation)") {
+    it ("must not be JDBC compliant" +
+        " - compliance is up to wrapped implementation") {
       driver.jdbcCompliant must be (false)
     }
   }
