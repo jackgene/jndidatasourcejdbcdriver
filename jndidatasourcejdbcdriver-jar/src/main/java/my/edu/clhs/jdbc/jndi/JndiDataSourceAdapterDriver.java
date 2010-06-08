@@ -40,16 +40,16 @@ import java.util.Properties;
  */
 public class JndiDataSourceAdapterDriver implements Driver {
     public Connection connect(String url, Properties info) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new JndiDataSourceDelegatingConnection("");  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info)
             throws SQLException {
-        return new DriverPropertyInfo[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new DriverPropertyInfo[1];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public int getMajorVersion() {
@@ -57,10 +57,10 @@ public class JndiDataSourceAdapterDriver implements Driver {
     }
 
     public int getMinorVersion() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 1;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean jdbcCompliant() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
