@@ -17,9 +17,9 @@
  */
 package my.edu.clhs.jdbc.jndi
 
-import org.scalatest.Spec
 import org.junit.runner.RunWith
 import org.scalatest.junit.{JUnitRunner, MustMatchersForJUnit}
+import org.scalatest.{WordSpec}
 
 /**
  * JndiDataSourceAdapterDriver specifications.
@@ -29,11 +29,12 @@ import org.scalatest.junit.{JUnitRunner, MustMatchersForJUnit}
  * @since 1.0 (June 5, 2010)
  */
 @RunWith(classOf[JUnitRunner])
-class JndiDataSourceAdapterDriverSpec extends Spec with MustMatchersForJUnit {
-  describe ("The JndiDataSourceAdapterDriver") {
+class JndiDataSourceAdapterDriverSpec extends WordSpec
+    with MustMatchersForJUnit {
+  "The JndiDataSourceAdapterDriver" must {
     val driver = new JndiDataSourceAdapterDriver
       
-    it ("must connect using delegating connection with the given jndiName") {
+    "connect using a delegating connection with the given jndiName" in {
       val jndiName = "jdbc/testDataSource"
       val conn = driver.connect("jdbc:jndi:" + jndiName, null)
       
@@ -41,36 +42,35 @@ class JndiDataSourceAdapterDriverSpec extends Spec with MustMatchersForJUnit {
         getJndiName() must equal (jndiName)
     }
     
-    it ("must not connect when given an unaccepted URL") {
+    "not connect when given an unaccepted URL" in {
       driver.connect(null, null) must be (null)
     }
     
-    it ("must accept URLs starting with \"jdbc:jndi:\"") {
+    "accept URLs starting with \"jdbc:jndi:\"" in {
       driver.acceptsURL("jdbc:jndi:jdbc/testDataSource") must be (true)
     }
     
-    it ("must not accept null URLs") {
+    "not accept null URLs" in {
       driver.acceptsURL(null) must be (false)
     }
     
-    it ("must not accept any other URLs") {
+    "not accept any other URLs" in {
       driver.acceptsURL("jdbc:jdbc/testDataSource") must be (false)
     }
     
-    it ("must not require any driver properties") {
+    "list \"java.naming.factory.initial\" as an optional driver property" in {
       driver.getPropertyInfo(null, null) must be ('empty)
     }
     
-    it ("must have a major version number of 1") {
+    "have a major version number of 1" in {
       driver.getMajorVersion() must equal (1)
     }
     
-    it ("must have a minor version number of 0") {
+    "have a minor version number of 0" in {
       driver.getMinorVersion() must equal (0)
     }
     
-    it ("must not be JDBC compliant" +
-        " - compliance is up to wrapped implementation") {
+    "not be JDBC compliant - compliance is up to wrapped implementation" in {
       driver.jdbcCompliant must be (false)
     }
   }

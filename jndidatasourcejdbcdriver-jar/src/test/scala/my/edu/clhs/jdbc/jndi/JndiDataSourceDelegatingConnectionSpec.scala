@@ -1,8 +1,8 @@
 package my.edu.clhs.jdbc.jndi
 
 import org.junit.runner.RunWith
-import org.scalatest.Spec
 import org.scalatest.junit.{MustMatchersForJUnit, JUnitRunner}
+import org.scalatest.{WordSpec}
 import org.springframework.mock.jndi.SimpleNamingContextBuilder
 import com.mockrunner.mock.jdbc.{MockDataSource, MockConnection}
 import java.sql.{Wrapper, Connection}
@@ -15,7 +15,7 @@ import java.sql.{Wrapper, Connection}
  * @since 1.0 (June 5, 2010)
  */
 @RunWith(classOf[JUnitRunner])
-class JndiDataSourceDelegatingConnectionSpec extends Spec
+class JndiDataSourceDelegatingConnectionSpec extends WordSpec
         with MustMatchersForJUnit {
   val jndiName = "jdbc/testDataSource"
       
@@ -28,30 +28,30 @@ class JndiDataSourceDelegatingConnectionSpec extends Spec
     SimpleNamingContextBuilder.emptyActivatedContextBuilder()
   namingContextBuilder.bind(jndiName, mockDs)
     
-  describe ("The JndiDataSorceDelegatingConnection") {
+  "The JndiDataSorceDelegatingConnection" must {
     val testInstance = new JndiDataSourceDelegatingConnection(jndiName)
     
-    it ("must look up its wrapped connection in JNDI") {
+    "look up its wrapped connection in JNDI" in {
       testInstance.asInstanceOf[Wrapper].
         unwrap(classOf[Connection]) must be theSameInstanceAs mockConn
     }
     
-    it ("must be a wrapper for java.sql.Connection") {
+    "be a wrapper for java.sql.Connection" in {
       testInstance.asInstanceOf[Wrapper].
         isWrapperFor(classOf[Connection]) must be (true)
     }
     
-    it ("must be a wrapper for java.sql.Connection implementations") {
+    "be a wrapper for java.sql.Connection implementations" in {
       testInstance.asInstanceOf[Wrapper].
         isWrapperFor(classOf[MockConnection]) must be (true)
     }
     
-    it ("must not be a wrapper for other classes") {
+    "not be a wrapper for other classes" in {
       testInstance.asInstanceOf[Wrapper].
         isWrapperFor(classOf[Object]) must be (false)
     }
     
     // This is here for documentation purposes only
-    it ("must delegate all method calls to the wrapped connection") (pending)
+    "delegate all method calls to the wrapped connection" is (pending)
   }
 }
