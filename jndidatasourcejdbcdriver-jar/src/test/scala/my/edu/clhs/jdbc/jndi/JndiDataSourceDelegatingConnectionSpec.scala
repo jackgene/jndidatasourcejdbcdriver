@@ -51,7 +51,31 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
         isWrapperFor(classOf[Object]) must be (false)
     }
     
-    // This is here for documentation purposes only
-    "delegate all method calls to the wrapped connection" is (pending)
+    "delegate \"createStatement\" calls to the wrapped connection" in {
+      val handler = mockConn.getStatementResultSetHandler()
+      val testStmt = testInstance.createStatement()
+      
+      List(testStmt) must equal (handler.getStatements())
+    }
+    
+    "delegate \"prepareStatement\" calls to the wrapped connection" in {
+      val handler = mockConn.getPreparedStatementResultSetHandler()
+      val testStmt = testInstance.prepareStatement("")
+      
+      List (testStmt) must equal (handler.getPreparedStatements())
+    }
+    
+    "delegate \"prepareCall\" calls to the wrapped connection" in {
+      val handler = mockConn.getCallableStatementResultSetHandler()
+      val testStmt = testInstance.prepareCall("")
+      
+      List(testStmt) must equal (handler.getCallableStatements())
+    }
+    
+    "delegate \"close\" calls to the wrapped connection" in {
+      testInstance.close()
+      
+      mockConn.isClosed() must be (true)
+    }
   }
 }
