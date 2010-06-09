@@ -58,7 +58,7 @@ class JndiDataSourceAdapterDriverSpec extends WordSpec
       driver.acceptsURL("jdbc:jdbc/testDataSource") must be (false)
     }
     
-    "list \"java.naming.factory.initial\" as an optional driver property" in {
+    "not require any driver properties" in {
       driver.getPropertyInfo(null, null) must be ('empty)
     }
     
