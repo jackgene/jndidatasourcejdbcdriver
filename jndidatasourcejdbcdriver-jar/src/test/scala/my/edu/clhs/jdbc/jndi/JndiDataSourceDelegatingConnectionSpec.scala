@@ -17,17 +17,17 @@ import java.sql.{Wrapper, Connection}
 @RunWith(classOf[JUnitRunner])
 class JndiDataSourceDelegatingConnectionSpec extends WordSpec
         with MustMatchersForJUnit {
-  val jndiName = "jdbc/testDataSource"
-      
+  val jndiName = "java:comp/env/jdbc/testDataSource"
+  
   val mockConn = new MockConnection
-      
+  
   val mockDs = new MockDataSource
   mockDs.setupConnection(mockConn)
-      
+  
   val namingContextBuilder =
     SimpleNamingContextBuilder.emptyActivatedContextBuilder()
   namingContextBuilder.bind(jndiName, mockDs)
-    
+  
   "The JndiDataSorceDelegatingConnection" must {
     val testInstance = new JndiDataSourceDelegatingConnection(jndiName)
     
