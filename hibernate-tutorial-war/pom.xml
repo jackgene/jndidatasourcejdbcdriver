@@ -17,9 +17,9 @@
     </dependency>
 
     <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.8.0.7</version>
+      <groupId>my.edu.clhs.jdbc.driver</groupId>
+      <artifactId>jndijdbcdriver</artifactId>
+      <version>1.0</version>
     </dependency>
 
     <!-- Because this is a web app, we also have a dependency on the servlet api. -->

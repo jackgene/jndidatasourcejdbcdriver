@@ -11,7 +11,8 @@
 
   <servlet>
     <servlet-name>Event Manager</servlet-name>
-    <servlet-class>org.hibernate.tutorial.web.EventManagerServlet
+    <servlet-class>
+      org.hibernate.tutorial.web.EventManagerServlet
     </servlet-class>
   </servlet>
 
@@ -30,4 +31,9 @@
     <servlet-name>Event Manager</servlet-name>
   </filter-mapping>
 
+  <resource-ref>
+    <res-ref-name>jdbc/tutorialDataSource</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
 </web-app>
