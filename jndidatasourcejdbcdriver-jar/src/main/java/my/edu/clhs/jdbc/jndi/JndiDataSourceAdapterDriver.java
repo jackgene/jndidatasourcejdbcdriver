@@ -65,6 +65,12 @@ public class JndiDataSourceAdapterDriver implements Driver {
     public Connection connect(String url, Properties info) throws SQLException {
         if (acceptsURL(url)) {
             String jndiName = url.substring(URL_PREFIX.length());
+            if (!jndiName.startsWith("java:comp/env/jdbc/")) {
+                DriverManager.println(
+                    "Warning, the JNDI name (" + jndiName + ") does not " +
+                    "follow Java EE resource reference conventions. " +
+                    "(it does not start with java:comp/env/jdbc/...)");
+            }
             
             return new JndiDataSourceDelegatingConnection(jndiName);
         } else {
