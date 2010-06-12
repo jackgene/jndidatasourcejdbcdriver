@@ -17,21 +17,10 @@
  */
 package my.edu.clhs.jdbc.jndi;
 
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,230 +29,288 @@ import java.util.Properties;
  * method invocations to the connection acquired from the data source in the
  * JNDI directory.
  *
+ * Note: Lazy loading is necessary to avoid deadlocks when looking up 
+ * data sources connections in hybrid environments (environments where
+ * parts of the application uses JNDI connections directly, and other parts use
+ * this driver). It is imperative that connection look up is NOT done during
+ * object initialization. See {@link JndiDataSourceAdapterDriver} documentation
+ * for more details.
+ * 
  * @author Jack Leow
  * @version 1.0
- * @since 1.0 (June 5, 2010)
+ * @since 1.0 (June 8, 2010)
  */
 class JndiDataSourceDelegatingConnection implements Connection {
+    private String jndiName; // JNDI name of the Data Source
+    private Connection delegate; // The physical connection
+    
     JndiDataSourceDelegatingConnection(String jndiName) {
-        
+        this.jndiName = jndiName;
     }
     
     String getJndiName() {
-        return null;
+        return jndiName;
+    }
+    
+    /**
+     * Acquires the actually physical connection, looking it up from the Data
+     * Source in JNDI if necessary.
+     * 
+     * @return the actual physical connection.
+     * @throws java.sql.SQLException if the connection cannot be acquired.
+     */
+    private Connection getPhysicalConnection() throws SQLException {
+        if (delegate == null) {
+            try {
+                InitialContext ctx = new InitialContext();
+                DataSource ds = (DataSource)ctx.lookup(jndiName);
+                delegate = ds.getConnection();
+            } catch (NamingException e) {
+                if (DriverManager.getLogWriter() != null) {
+                    e.printStackTrace(DriverManager.getLogWriter());
+                }
+                throw new SQLException(
+                    "NamingException: " + e.getExplanation());
+            }
+        }
+        
+        return delegate;
     }
     
     public Statement createStatement() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createStatement();
     }
-
+    
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(sql);
     }
-
+    
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareCall(sql);
     }
-
+    
     public String nativeSQL(String sql) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().nativeSQL(sql);
     }
-
+    
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setAutoCommit(autoCommit);
     }
-
+    
     public boolean getAutoCommit() throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getAutoCommit();
     }
-
+    
     public void commit() throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().commit();
     }
-
+    
     public void rollback() throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().rollback();
     }
-
+    
     public void close() throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().close();
     }
-
+    
     public boolean isClosed() throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().isClosed();
     }
-
+    
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getMetaData();
     }
-
+    
     public void setReadOnly(boolean readOnly) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setReadOnly(readOnly);
     }
-
+    
     public boolean isReadOnly() throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().isReadOnly();
     }
-
+    
     public void setCatalog(String catalog) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setCatalog(catalog);
     }
-
+    
     public String getCatalog() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getCatalog();
     }
-
+    
     public void setTransactionIsolation(int level) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setTransactionIsolation(level);
     }
-
+    
     public int getTransactionIsolation() throws SQLException {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getTransactionIsolation();
     }
-
+    
     public SQLWarning getWarnings() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getWarnings();
     }
-
+    
     public void clearWarnings() throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().clearWarnings();
     }
-
+    
     public Statement createStatement(
-            int resultSetType, int resultSetConcurrency) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+            int resultSetType, int resultSetConcurrency)
+            throws SQLException {
+        return getPhysicalConnection().createStatement(
+            resultSetType, resultSetConcurrency);
     }
-
+    
     public PreparedStatement prepareStatement(
             String sql, int resultSetType, int resultSetConcurrency)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(
+            sql, resultSetType, resultSetConcurrency);
     }
-
+    
     public CallableStatement prepareCall(
             String sql, int resultSetType, int resultSetConcurrency)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareCall(
+            sql, resultSetType, resultSetConcurrency);
     }
-
+    
     public Map getTypeMap() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getTypeMap();
     }
-
+    
     public void setTypeMap(Map map) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setTypeMap(map);
     }
-
+    
     public void setHoldability(int holdability) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().setHoldability(holdability);
     }
-
+    
     public int getHoldability() throws SQLException {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getHoldability();
     }
-
+    
     public Savepoint setSavepoint() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().setSavepoint();
     }
-
+    
     public Savepoint setSavepoint(String name) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().setSavepoint(name);
     }
-
+    
     public void rollback(Savepoint savepoint) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().rollback(savepoint);
     }
-
+    
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        getPhysicalConnection().releaseSavepoint(savepoint);
     }
-
+    
     public Statement createStatement(
             int resultSetType, int resultSetConcurrency,
             int resultSetHoldability) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createStatement(
+            resultSetType, resultSetConcurrency, resultSetHoldability);
     }
-
+    
     public PreparedStatement prepareStatement(
             String sql, int resultSetType, int resultSetConcurrency,
             int resultSetHoldability) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(sql, resultSetType,
+            resultSetConcurrency, resultSetHoldability);
     }
-
+    
     public CallableStatement prepareCall(
             String sql, int resultSetType, int resultSetConcurrency,
             int resultSetHoldability) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareCall(
+            sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
-
+    
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(sql, autoGeneratedKeys);
     }
-
+    
     public PreparedStatement prepareStatement(String sql, int[] columnIndexes)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(sql, columnIndexes);
     }
-
+    
     public PreparedStatement prepareStatement(String sql, String[] columnNames)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().prepareStatement(sql, columnNames);
     }
-
+    
     public Clob createClob() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createClob();
     }
-
+    
     public Blob createBlob() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createBlob();
     }
-
+    
     public NClob createNClob() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createNClob();
     }
-
+    
     public SQLXML createSQLXML() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createSQLXML();
     }
-
+    
     public boolean isValid(int timeout) throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().isValid(timeout);
     }
-
+    
     public void setClientInfo(String name, String value)
             throws SQLClientInfoException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            getPhysicalConnection().setClientInfo(name, value);
+        } catch (SQLClientInfoException e) {
+            throw e;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
+    
     public void setClientInfo(Properties properties)
             throws SQLClientInfoException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            getPhysicalConnection().setClientInfo(properties);
+        } catch (SQLClientInfoException e) {
+            throw e;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
+    
     public String getClientInfo(String name) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getClientInfo(name);
     }
-
+    
     public Properties getClientInfo() throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().getClientInfo();
     }
-
+    
     public Array createArrayOf(String typeName, Object[] elements)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createArrayOf(typeName, elements);
     }
-
+    
     public Struct createStruct(String typeName, Object[] attributes)
             throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getPhysicalConnection().createStruct(typeName, attributes);
     }
-
+    
     public Object unwrap(Class iface) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (!Connection.class.isAssignableFrom(iface)) {
+            throw new SQLException("iface must be a " + Connection.class);
+        }
+        
+        return getPhysicalConnection();
     }
-
+    
     public boolean isWrapperFor(Class iface) throws SQLException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return Connection.class.isAssignableFrom(iface);
     }
 }
