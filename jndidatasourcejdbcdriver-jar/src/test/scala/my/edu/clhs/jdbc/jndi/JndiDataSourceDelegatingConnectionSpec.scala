@@ -5,7 +5,7 @@ import org.scalatest.junit.{MustMatchersForJUnit, JUnitRunner}
 import org.scalatest.{WordSpec}
 import org.springframework.mock.jndi.SimpleNamingContextBuilder
 import com.mockrunner.mock.jdbc.{MockDataSource, MockConnection}
-import java.sql.{Wrapper, Connection}
+import java.sql.Connection
 
 /**
  * JndiDataSourceDelegatingConnection specifications.
@@ -30,26 +30,6 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
   
   "The JndiDataSorceDelegatingConnection" must {
     val testInstance = new JndiDataSourceDelegatingConnection(jndiName)
-    
-    "look up its wrapped connection in JNDI" in {
-      testInstance.asInstanceOf[Wrapper].
-        unwrap(classOf[Connection]) must be theSameInstanceAs mockConn
-    }
-    
-    "be a wrapper for java.sql.Connection" in {
-      testInstance.asInstanceOf[Wrapper].
-        isWrapperFor(classOf[Connection]) must be (true)
-    }
-    
-    "be a wrapper for java.sql.Connection implementations" in {
-      testInstance.asInstanceOf[Wrapper].
-        isWrapperFor(classOf[MockConnection]) must be (true)
-    }
-    
-    "not be a wrapper for other classes" in {
-      testInstance.asInstanceOf[Wrapper].
-        isWrapperFor(classOf[Object]) must be (false)
-    }
     
     "delegate \"createStatement\" calls to the wrapped connection" in {
       val handler = mockConn.getStatementResultSetHandler()

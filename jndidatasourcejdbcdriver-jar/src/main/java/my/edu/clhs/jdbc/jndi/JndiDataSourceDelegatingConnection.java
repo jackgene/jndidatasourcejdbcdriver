@@ -22,7 +22,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Delegating {@link java.sql.Connection} proxy. This connection delegates
@@ -240,77 +239,5 @@ class JndiDataSourceDelegatingConnection implements Connection {
     public PreparedStatement prepareStatement(String sql, String[] columnNames)
             throws SQLException {
         return getPhysicalConnection().prepareStatement(sql, columnNames);
-    }
-    
-    public Clob createClob() throws SQLException {
-        return getPhysicalConnection().createClob();
-    }
-    
-    public Blob createBlob() throws SQLException {
-        return getPhysicalConnection().createBlob();
-    }
-    
-    public NClob createNClob() throws SQLException {
-        return getPhysicalConnection().createNClob();
-    }
-    
-    public SQLXML createSQLXML() throws SQLException {
-        return getPhysicalConnection().createSQLXML();
-    }
-    
-    public boolean isValid(int timeout) throws SQLException {
-        return getPhysicalConnection().isValid(timeout);
-    }
-    
-    public void setClientInfo(String name, String value)
-            throws SQLClientInfoException {
-        try {
-            getPhysicalConnection().setClientInfo(name, value);
-        } catch (SQLClientInfoException e) {
-            throw e;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    public void setClientInfo(Properties properties)
-            throws SQLClientInfoException {
-        try {
-            getPhysicalConnection().setClientInfo(properties);
-        } catch (SQLClientInfoException e) {
-            throw e;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    public String getClientInfo(String name) throws SQLException {
-        return getPhysicalConnection().getClientInfo(name);
-    }
-    
-    public Properties getClientInfo() throws SQLException {
-        return getPhysicalConnection().getClientInfo();
-    }
-    
-    public Array createArrayOf(String typeName, Object[] elements)
-            throws SQLException {
-        return getPhysicalConnection().createArrayOf(typeName, elements);
-    }
-    
-    public Struct createStruct(String typeName, Object[] attributes)
-            throws SQLException {
-        return getPhysicalConnection().createStruct(typeName, attributes);
-    }
-    
-    public Object unwrap(Class iface) throws SQLException {
-        if (!Connection.class.isAssignableFrom(iface)) {
-            throw new SQLException("iface must be a " + Connection.class);
-        }
-        
-        return getPhysicalConnection();
-    }
-    
-    public boolean isWrapperFor(Class iface) throws SQLException {
-        return Connection.class.isAssignableFrom(iface);
     }
 }

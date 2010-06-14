@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Specification-Title: Java Database Connectivity API
-Specification-Version: 4.0
+Specification-Version: 3.0
 Specification-Vendor: Sun Microsystems
 Implementation-Title: JNDI Data Source Adapter JDBC Driver
 Implementation-Version: 1.0.0
