@@ -42,7 +42,10 @@ import java.util.Properties;
  * 
  * <p>To avoid this, {@link #connect(String,Properties)} returns an unitialized
  * proxy connection, and defers JNDI data source look up to the connection,
- * after DriverManager locks have been released.</p>
+ * after DriverManager locks have been released. As a consequence a
+ * {@link Connection} may be returned even if the request data source does not
+ * exist or is misconfigured, or if the target database is down. An exception
+ * is thrown only when the connection is used.</p>
  * 
  * @author Jack Leow
  * @version 1.0
