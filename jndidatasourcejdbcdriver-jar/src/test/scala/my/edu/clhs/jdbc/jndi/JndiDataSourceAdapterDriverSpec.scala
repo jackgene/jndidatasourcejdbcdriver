@@ -54,8 +54,8 @@ class JndiDataSourceAdapterDriverSpec extends WordSpec
       driver.acceptsURL(null) must be (false)
     }
     
-    "not accept any other URLs" in {
-      driver.acceptsURL("jdbc:jdbc/testDataSource") must be (false)
+    "not accept URLs not starting with \"jdbc:jndi:\"" in {
+      driver.acceptsURL("jdbc:jndijdbc/testDataSource") must be (false)
     }
     
     "not require any driver properties" in {
