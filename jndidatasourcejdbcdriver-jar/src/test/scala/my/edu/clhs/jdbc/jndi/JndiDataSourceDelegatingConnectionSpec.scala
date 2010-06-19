@@ -5,7 +5,6 @@ import org.scalatest.junit.{MustMatchersForJUnit, JUnitRunner}
 import org.scalatest.{WordSpec}
 import org.springframework.mock.jndi.SimpleNamingContextBuilder
 import com.mockrunner.mock.jdbc.{MockDataSource, MockConnection}
-import java.sql.Connection
 
 /**
  * JndiDataSourceDelegatingConnection specifications.
@@ -55,9 +54,40 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
       List(testStmt) must equal (expectedStmt)
     }
     
-    "delegate \"close\" calls to the wrapped connection" in {
-      testInstance.close()
+    "delegate \"getAutoCommit\" calls to the wrapped connection" in {
+      mockConn.setAutoCommit(false)
+      testInstance.getAutoCommit() must be (false)
       
+      mockConn.setAutoCommit(true)
+      testInstance.getAutoCommit() must be (true)
+    }
+    
+    "delegate \"setAutoCommit\" calls to the wrapped connection" in {
+      mockConn.setAutoCommit(false)
+      testInstance.setAutoCommit(true)
+      mockConn.getAutoCommit() must be (true)
+      
+      mockConn.setAutoCommit(true)
+      testInstance.setAutoCommit(false)
+      mockConn.getAutoCommit() must be (false)
+    }
+    
+    "delegate \"commit\" calls to the wrapped connection" in {
+      mockConn.resetNumberCommits()
+      testInstance.commit()
+      mockConn.getNumberCommits() must equal (1)
+    }
+    
+    "delegate \"rollback\" calls to the wrapped connection" in {
+      mockConn.resetNumberRollbacks()
+      testInstance.rollback()
+      mockConn.getNumberRollbacks() must equal (1)
+    }
+    
+    "delegate \"close\" calls to the wrapped connection" in {
+      mockConn.isClosed() must be (false)
+      
+      testInstance.close()
       mockConn.isClosed() must be (true)
     }
   }
