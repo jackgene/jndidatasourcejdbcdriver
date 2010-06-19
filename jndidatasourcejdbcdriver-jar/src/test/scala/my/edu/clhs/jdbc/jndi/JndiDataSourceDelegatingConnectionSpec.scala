@@ -17,19 +17,20 @@ import com.mockrunner.mock.jdbc.{MockDataSource, MockConnection}
 @RunWith(classOf[JUnitRunner])
 class JndiDataSourceDelegatingConnectionSpec extends WordSpec
         with MustMatchersForJUnit {
-  val jndiName = "java:comp/env/jdbc/testDataSource"
-  
-  val mockConn = new MockConnection
-  
-  val mockDs = new MockDataSource
-  mockDs.setupConnection(mockConn)
-  
   val namingContextBuilder =
     SimpleNamingContextBuilder.emptyActivatedContextBuilder()
-  namingContextBuilder.bind(jndiName, mockDs)
   
   "The JndiDataSorceDelegatingConnection" when {
     "given a valid JNDI name" must {
+      val jndiName = "java:comp/env/jdbc/testDataSource"
+    
+      val mockConn = new MockConnection
+    
+      val mockDs = new MockDataSource
+      mockDs.setupConnection(mockConn)
+    
+      namingContextBuilder.bind(jndiName, mockDs)
+    
       val testInstance = new JndiDataSourceDelegatingConnection(jndiName)
     
       "delegate \"createStatement\" calls to the wrapped connection" in {
@@ -43,7 +44,8 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
       "delegate \"prepareStatement\" calls to the wrapped connection" in {
         val handler = mockConn.getPreparedStatementResultSetHandler()
         val testStmt = testInstance.prepareStatement("")
-        val expectedStmt = List.fromArray(handler.getPreparedStatements().toArray)
+        val expectedStmt =
+          List.fromArray(handler.getPreparedStatements().toArray)
       
         List(testStmt) must equal (expectedStmt)
       }
@@ -51,7 +53,8 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
       "delegate \"prepareCall\" calls to the wrapped connection" in {
         val handler = mockConn.getCallableStatementResultSetHandler()
         val testStmt = testInstance.prepareCall("")
-        val expectedStmt = List.fromArray(handler.getCallableStatements().toArray)
+        val expectedStmt =
+          List.fromArray(handler.getCallableStatements().toArray)
       
         List(testStmt) must equal (expectedStmt)
       }
@@ -94,8 +97,21 @@ class JndiDataSourceDelegatingConnectionSpec extends WordSpec
       }
     }
     
-    "given an invalid JNDI name" must {
-      val testInstance = new JndiDataSourceDelegatingConnection("invalidName")
+    "given a JNDI name referencing no object" must {
+      val testInstance = new JndiDataSourceDelegatingConnection(
+        "java:comp/env/param/nonExistent")
+      
+      "complain when any method is invoked on it" in {
+        evaluating { testInstance.isClosed() } must produce [SQLException]
+      }
+    }
+    
+    "given a JNDI name referencing an object that is not a DataSource" must {
+      val jndiName = "java:comp/env/param/arbitraryObject"
+      
+      namingContextBuilder.bind(jndiName, new Object)
+      
+      val testInstance = new JndiDataSourceDelegatingConnection(jndiName)
       
       "complain when any method is invoked on it" in {
         evaluating { testInstance.isClosed() } must produce [SQLException]
