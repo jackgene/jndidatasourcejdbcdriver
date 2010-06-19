@@ -64,12 +64,22 @@ class JndiDataSourceDelegatingConnection implements Connection {
                 InitialContext ctx = new InitialContext();
                 DataSource ds = (DataSource)ctx.lookup(jndiName);
                 delegate = ds.getConnection();
+            } catch (ClassCastException e) {
+                if (DriverManager.getLogWriter() != null) {
+                    e.printStackTrace(DriverManager.getLogWriter());
+                }
+                
+                SQLException sqle = new SQLException(e.getMessage());
+                sqle.initCause(e);
+                throw sqle;
             } catch (NamingException e) {
                 if (DriverManager.getLogWriter() != null) {
                     e.printStackTrace(DriverManager.getLogWriter());
                 }
-                throw new SQLException(
-                    "NamingException: " + e.getExplanation());
+                
+                SQLException sqle = new SQLException(e.getExplanation());
+                sqle.initCause(e);
+                throw sqle;
             }
         }
         
