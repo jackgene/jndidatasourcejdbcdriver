@@ -70,7 +70,7 @@ public class JndiDataSourceAdapterDriver implements Driver {
             String jndiName = url.substring(URL_PREFIX.length());
             if (!jndiName.startsWith("java:comp/env/jdbc/")) {
                 DriverManager.println(
-                    "Warning, the JNDI name (" + jndiName + ") does not " +
+                    "WARNING: the JNDI name (" + jndiName + ") does not " +
                     "follow Java EE resource reference conventions. " +
                     "(it does not start with java:comp/env/jdbc/...)");
             }

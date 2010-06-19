@@ -17,6 +17,8 @@
  */
 package my.edu.clhs.jdbc.jndi
 
+import java.io.{PrintWriter, StringWriter}
+import java.sql.DriverManager
 import org.junit.runner.RunWith
 import org.scalatest.junit.{JUnitRunner, MustMatchersForJUnit}
 import org.scalatest.{WordSpec}
@@ -35,11 +37,29 @@ class JndiDataSourceAdapterDriverSpec extends WordSpec
     val driver = new JndiDataSourceAdapterDriver
       
     "connect using a delegating connection with the given jndiName" in {
-      val jndiName = "jdbc/testDataSource"
+      val jndiName = "java:comp/env/jdbc/testDataSource"
       val conn = driver.connect("jdbc:jndi:" + jndiName, null)
       
       conn.asInstanceOf[JndiDataSourceDelegatingConnection].
         getJndiName() must equal (jndiName)
+    }
+    
+    "not log any warnings when connecting using a res-ref JNDI name" in {
+      val logWriter = new StringWriter
+      DriverManager.setLogWriter(new PrintWriter(logWriter))
+      
+      driver.connect("jdbc:jndi:java:comp/env/jdbc/testDataSource", null)
+      
+      logWriter.toString must have length (0)
+    }
+    
+    "log a warning when connecting using a non-standard JNDI name" in {
+      val logWriter = new StringWriter
+      DriverManager.setLogWriter(new PrintWriter(logWriter))
+      
+      driver.connect("jdbc:jndi:nonStandardDataSource", null)
+      
+      logWriter.toString must startWith ("WARNING:")
     }
     
     "not connect when given an unaccepted URL" in {
