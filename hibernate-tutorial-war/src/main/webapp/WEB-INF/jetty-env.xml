@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ context.xml
+  ~ jetty-env.xml
   ~
   ~ Copyright 2010 Jack Leow
   ~
@@ -16,9 +16,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<Context>
-  <Resource name="jdbc/tutorialDataSource" auth="Container"
-            type="javax.sql.DataSource"
-            driverClassName="org.hsqldb.jdbcDriver"
-            url="jdbc:hsqldb:file:target/run/hibernate-tutorial.hsqldb" />
-</Context>
+<!DOCTYPE Configure
+        PUBLIC "-//Mort Bay Consulting//DTD Configure//EN"
+        "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+  <New id="tutorialDataSource" class="org.mortbay.jetty.plus.naming.Resource">
+    <Arg>jdbc/tutorialDataSource</Arg>
+    <Arg>
+      <New class="org.hsqldb.jdbc.jdbcDataSource">
+        <Set name="database">
+          jdbc:hsqldb:file:target/run/hibernate-tutorial.hsqldb
+        </Set>
+        <Set name="user" />
+      </New>
+    </Arg>
+  </New>
+</Configure>
