@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>my.edu.clhs.jdbc.driver</groupId>
-  <artifactId>jndijdbcdriver</artifactId>
+  <artifactId>jndidatasourcejdbcdriver</artifactId>
   <version>1.0</version>
   <name>JNDI Data Source Adapting JDBC Driver</name>
   <url>http://code.google.com/p/jndidatasource-jdbcdriver</url>
