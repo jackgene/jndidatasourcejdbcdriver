@@ -80,6 +80,9 @@
         <configuration>
           <source>1.3</source>
           <target>1.2</target>
+          <compilerArguments>
+            <bootclasspath>${settings.localRepository}/com/sun/rt/1.4.2_06/rt-1.4.2_06.jar</bootclasspath>
+          </compilerArguments>
         </configuration>
       </plugin>
       <plugin>
