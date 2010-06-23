@@ -63,6 +63,10 @@ class JndiDataSourceAdapterDriverSpec extends WordSpec
     }
     
     "not connect when given an unaccepted URL" in {
+      driver.connect("jdbc:db:foobar", null) must be (null)
+    }
+    
+    "not connect when given a null URL" in {
       driver.connect(null, null) must be (null)
     }
     
