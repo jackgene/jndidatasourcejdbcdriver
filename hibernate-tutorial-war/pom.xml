@@ -8,6 +8,7 @@
   <artifactId>hibernate-tutorial</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
+  <name>Hibernate Tutorial based JNDI-JDBC Driver Example</name>
 
   <dependencies>
     <dependency>
@@ -18,7 +19,7 @@
 
     <dependency>
       <groupId>my.edu.clhs.jdbc.driver</groupId>
-      <artifactId>jndijdbcdriver</artifactId>
+      <artifactId>jndidatasourcejdbcdriver</artifactId>
       <version>1.0</version>
     </dependency>
 
