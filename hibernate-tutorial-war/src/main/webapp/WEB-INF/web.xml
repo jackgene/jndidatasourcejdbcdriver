@@ -4,9 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   
-  <display-name>
-    Hibernate Tutorial using JNDI Data Source Adapter JDBC Driver
-  </display-name>
+  <display-name>Hibernate Tutorial based JNDI-JDBC Driver Example</display-name>
   
   <listener>
     <listener-class>

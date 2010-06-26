@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Implementation-Title: Hibernate Tutorial using JNDI Data Source Adapter JDBC Driver
+Implementation-Title: Hibernate Tutorial based JNDI-JDBC Driver Example
 Implementation-Version: 1.0.0
