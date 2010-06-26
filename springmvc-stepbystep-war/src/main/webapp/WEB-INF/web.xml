@@ -4,7 +4,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
   
-  <display-name>Spring MVC Step-by-step Tutorial</display-name>
+  <display-name>
+  	Spring MVC Step-by-step based JNDI-JDBC Driver Example
+  </display-name>
+  
   <listener>
     <listener-class>
       org.springframework.web.context.ContextLoaderListener
@@ -29,4 +32,11 @@
       index.jsp
     </welcome-file>
   </welcome-file-list>
+  
+  <resource-ref>
+    <res-ref-name>jdbc/tutorialDataSource</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
 </web-app>

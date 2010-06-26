@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Implementation-Title: Spring MVC Step-by-step Tutorial
+Implementation-Title: Spring MVC Step-by-step based JNDI-JDBC Driver Example
 Implementation-Version: 1.0.0

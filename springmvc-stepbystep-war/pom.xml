@@ -7,7 +7,7 @@
   <groupId>my.edu.clhs.jdbc.jndi.example</groupId>
   <artifactId>springmvc-stepbystep</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Spring MVC Step-by-step Tutorial</name>
+  <name>Spring MVC Step-by-step based JNDI-JDBC Driver Example</name>
   <packaging>war</packaging>
   
   <dependencies>
@@ -39,23 +39,17 @@
       <scope>compile</scope>
     </dependency>
     
-      <!-- Runtime dependencies -->
-    <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
-      <version>1.4</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.8.0.7</version>
-      <scope>runtime</scope>
-    </dependency>
+    <!-- Runtime dependencies -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.1.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>my.edu.clhs.jdbc.driver</groupId>
+      <artifactId>jndidatasourcejdbcdriver</artifactId>
+      <version>1.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -117,11 +111,25 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>tomcat-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+          </dependency>
+        </dependencies>
       </plugin>
       
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
