@@ -20,5 +20,5 @@
   <Resource name="jdbc/tutorialDataSource" auth="Container"
             type="javax.sql.DataSource"
             driverClassName="org.hsqldb.jdbcDriver"
-            url="jdbc:hsqldb:file:target/run/hibernate-tutorial.hsqldb" />
+            url="jdbc:hsqldb:file:runtime/main/data/hibernate-tutorial.hsqldb" />
 </Context>
