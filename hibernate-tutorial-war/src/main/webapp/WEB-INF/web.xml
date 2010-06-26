@@ -3,34 +3,39 @@
          xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-
+  
+  <display-name>
+    Hibernate Tutorial using JNDI Data Source Adapter JDBC Driver
+  </display-name>
+  
   <listener>
-    <listener-class>org.hibernate.tutorial.web.SessionFactoryInitializer
+    <listener-class>
+      org.hibernate.tutorial.web.SessionFactoryInitializer
     </listener-class>
   </listener>
-
+  
   <servlet>
     <servlet-name>Event Manager</servlet-name>
     <servlet-class>
       org.hibernate.tutorial.web.EventManagerServlet
     </servlet-class>
   </servlet>
-
+  
   <servlet-mapping>
     <servlet-name>Event Manager</servlet-name>
     <url-pattern>/eventmanager</url-pattern>
   </servlet-mapping>
-
+  
   <filter>
     <filter-name>Session Interceptor</filter-name>
     <filter-class>org.hibernate.tutorial.web.SessionInterceptor</filter-class>
   </filter>
-
+  
   <filter-mapping>
     <filter-name>Session Interceptor</filter-name>
     <servlet-name>Event Manager</servlet-name>
   </filter-mapping>
-
+  
   <resource-ref>
     <res-ref-name>jdbc/tutorialDataSource</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>

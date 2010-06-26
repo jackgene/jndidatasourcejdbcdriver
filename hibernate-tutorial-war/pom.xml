@@ -3,25 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
+  
   <groupId>my.edu.clhs.jdbc.jndi.example</groupId>
   <artifactId>hibernate-tutorial</artifactId>
   <version>1.0.0</version>
   <packaging>war</packaging>
-
+  
   <dependencies>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>3.3.2.GA</version>
     </dependency>
-
+    
     <dependency>
       <groupId>my.edu.clhs.jdbc.driver</groupId>
       <artifactId>jndijdbcdriver</artifactId>
       <version>1.0</version>
     </dependency>
-
+    
     <!-- Because this is a web app, we also have a dependency on the servlet api. -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -29,14 +29,14 @@
       <version>2.3</version>
       <scope>provided</scope>
     </dependency>
-
+    
     <!-- Hibernate uses slf4j for logging, for our purposes here use the simple backend -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>1.5.8</version>
     </dependency>
-
+    
     <!-- Hibernate gives you a choice of bytecode providers between cglib and javassist -->
     <dependency>
       <groupId>javassist</groupId>
