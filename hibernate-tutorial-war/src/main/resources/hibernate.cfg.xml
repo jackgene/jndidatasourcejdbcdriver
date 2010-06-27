@@ -15,9 +15,6 @@
       jdbc:jndi:java:comp/env/jdbc/tutorialDataSource
     </property>
 
-    <!-- JDBC connection pool (use the built-in) -->
-    <property name="connection.pool_size">2</property>
-
     <!-- SQL dialect -->
     <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
 
