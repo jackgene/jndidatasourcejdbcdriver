@@ -17,11 +17,22 @@
  */
 package my.edu.clhs.jdbc.jndi;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.util.Map;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.Map;
 
 /**
  * Delegating {@link java.sql.Connection} proxy. This connection delegates
@@ -51,6 +62,31 @@ class JndiDataSourceDelegatingConnection implements Connection {
         return jndiName;
     }
     
+    private void handleException(Exception e) throws SQLException {
+        if (DriverManager.getLogWriter() != null) {
+            e.printStackTrace(DriverManager.getLogWriter());
+        }
+        
+        SQLException sqle = new SQLException(e.getMessage());
+        try {
+            Method initCause = SQLException.class.getMethod(
+                "initCause", new Class[] {Exception.class});
+            
+            initCause.invoke(sqle, new Object[] {e});
+        } catch (NoSuchMethodException e1) {
+            // Do nothing.
+            // There's no java.lang.Throwable#initCause(Exception) in J2SE 1.3
+        } catch (SecurityException e1) {
+            throw new RuntimeException(e1.toString());
+        } catch (InvocationTargetException e1) {
+            throw new RuntimeException(e1.toString());
+        } catch (IllegalAccessException e1) {
+            throw new RuntimeException(e1.toString());
+        }
+        
+        throw sqle;
+    }
+    
     /**
      * Acquires the actually physical connection, looking it up from the Data
      * Source in JNDI if necessary.
@@ -65,21 +101,9 @@ class JndiDataSourceDelegatingConnection implements Connection {
                 DataSource ds = (DataSource)ctx.lookup(jndiName);
                 delegate = ds.getConnection();
             } catch (ClassCastException e) {
-                if (DriverManager.getLogWriter() != null) {
-                    e.printStackTrace(DriverManager.getLogWriter());
-                }
-                
-                SQLException sqle = new SQLException(e.getMessage());
-                sqle.initCause(e);
-                throw sqle;
+                handleException(e);
             } catch (NamingException e) {
-                if (DriverManager.getLogWriter() != null) {
-                    e.printStackTrace(DriverManager.getLogWriter());
-                }
-                
-                SQLException sqle = new SQLException(e.getExplanation());
-                sqle.initCause(e);
-                throw sqle;
+                handleException(e);
             }
         }
         
