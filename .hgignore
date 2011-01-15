@@ -20,3 +20,6 @@
 \.iml$
 \.ipr$
 \.iws$
+
+# Example app data directories
+^[^/]*/runtime/main/data$
