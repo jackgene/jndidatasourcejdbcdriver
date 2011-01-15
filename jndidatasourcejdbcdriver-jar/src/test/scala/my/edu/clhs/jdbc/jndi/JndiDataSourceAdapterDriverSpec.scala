@@ -19,12 +19,13 @@ package my.edu.clhs.jdbc.jndi
 
 import java.io.{PrintWriter, StringWriter}
 import java.sql.DriverManager
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.{JUnitRunner, MustMatchersForJUnit}
 import org.scalatest.{WordSpec}
 
 /**
- * JndiDataSourceAdapterDriver specifications.
+ * {@link JndiDataSourceAdapterDriver} specifications.
  * 
  * @author Jack Leow
  * @version 1.0
@@ -94,7 +95,7 @@ class JndiDataSourceAdapterDriverSpec extends WordSpec
       driver.getMinorVersion() must equal (0)
     }
     
-    "not be JDBC compliant - compliance is up to wrapped implementation" in {
+    "not be JDBC compliant - that is up to the wrapped implementation" in {
       driver.jdbcCompliant must be (false)
     }
   }
