@@ -17,7 +17,11 @@
  */
 package my.edu.clhs.jdbc.jndi;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
